@@ -300,7 +300,7 @@ compile(){
     NAME="$1"
 	disable_gtkdoc "$NAME" &> "$DIRECTORY"/logs/"$NAME".log
     
-	CONF_ARGS="--prefix=/opt/xfce4 --disable-gtk2 --libdir=/usr/lib64 --sysconfdir=/etc --datarootdir=/usr/share --disable-man --localstatedir=/var --enable-keybinder --enable-libnotify"
+	CONF_ARGS="--prefix=/opt/xfce4 --disable-gtk2 --sysconfdir=/etc --datarootdir=/usr/share --disable-man --localstatedir=/var --enable-keybinder --enable-libnotify"
     ./autogen.sh &>> "$DIRECTORY"/logs/"$NAME".log
     ./configure $CONF_ARGS --enable-maintainer-mode &>> "$DIRECTORY"/logs/"$NAME".log
     
