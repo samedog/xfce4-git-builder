@@ -1,5 +1,5 @@
 #!/bin/bash
-## build wine with vkd3d + deps
+## build xfce4
 ##########################################################################################
 # By Diego Cardenas "The Samedog" under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
 # (www.gnu.org/licenses/old-licenses/gpl-2.0.html) e-mail: the.samedog[]gmail.com.
