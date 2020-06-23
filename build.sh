@@ -188,7 +188,7 @@ compile_cmake(){
     cd "$DIRECTORY"/xfce4-prepare/"$NAME"
 	disable_gtkdoc "$NAME" &> "$DIRECTORY"/logs/"$NAME".log
     
-    CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/opt/xfce4  -DCMAKE_INSTALL_DATAROOTDIR=/usr/share -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR"
+    CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/opt/xfce4  -DCMAKE_INSTALL_DATAROOTDIR=/usr/share -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR=/var .."
     
 	mkdir build
 	cd build
