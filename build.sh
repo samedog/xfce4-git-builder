@@ -20,6 +20,13 @@ REPOFLAG=0
 THRD=0
 threads=$(grep -c processor /proc/cpuinfo)
 
+### just in case we set this
+export PATH="/opt/xfce4/bin:/opt/xfce4/sbin:$PATH"
+export LD_LIBRARY_PATH="/opt/xfce4/lib:$LD_LIBRARY_PATH"
+export CPLUS_INCLUDE_PATH="/opt/xfce4/include:$CPLUS_INCLUDE_PATH" 
+export PKG_CONFIG_PATH="/opt/xfce4/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+
 for ARG in $ARGS
     do
         if [[ $ARG == "--threads"* ]];then
@@ -52,190 +59,49 @@ cleanup(){
     
 }
 
-process_repos() {
-    
-    if [ ! -d "xfce4-dev-tools" ];then
-        git clone https://gitlab.xfce.org/xfce/xfce4-dev-tools
+process_git(){
+	GURL="$1"
+	NAME=$(echo $GURL | rev | cut -d '/' -f 1 | rev)
+	if [ ! -d "$NAME" ];then
+        git clone $GURL
     else
-        cd ./xfce4-dev-tools
+        cd ./$NAME
         git clean -xdf
         git reset --hard HEAD
         git pull origin master
         cd ..
     fi
-    
-    if [ ! -d "libxfce4util" ];then
-        git clone https://gitlab.xfce.org/xfce/libxfce4util
-    else
-        cd ./libxfce4util
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfconf" ];then
-        git clone https://gitlab.xfce.org/xfce/xfconf
-    else
-        cd ./xfconf
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "libxfce4ui" ];then
-        git clone https://gitlab.xfce.org/xfce/libxfce4ui
-    else
-        cd ./libxfce4ui
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "garcon" ];then
-        git clone https://gitlab.xfce.org/xfce/garcon
-    else
-        cd ./garcon
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "exo" ];then
-        git clone https://gitlab.xfce.org/xfce/exo
-    else
-        cd ./exo
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "thunar" ];then
-        git clone https://gitlab.xfce.org/xfce/thunar
-    else
-        cd ./thunar
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-panel" ];then
-        git clone https://gitlab.xfce.org/xfce/xfce4-panel
-    else
-        cd ./xfce4-panel
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-settings" ];then
-        git clone https://gitlab.xfce.org/xfce/xfce4-settings
-    else
-        cd ./xfce4-settings
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-session" ];then
-        git clone https://gitlab.xfce.org/xfce/xfce4-session
-    else
-        cd ./xfce4-session
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfdesktop" ];then
-        git clone https://gitlab.xfce.org/xfce/xfdesktop
-    else
-        cd ./xfdesktop
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfwm4" ];then
-        git clone https://gitlab.xfce.org/xfce/xfwm4
-    else
-        cd ./xfwm4
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-appfinder" ];then
-        git clone https://gitlab.xfce.org/xfce/xfce4-appfinder
-    else
-        cd ./xfce4-appfinder
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "tumbler" ];then
-        git clone https://gitlab.xfce.org/xfce/tumbler
-	else
-        cd ./tumbler
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-wavelan-plugin" ];then
-        git clone https://gitlab.xfce.org/panel-plugins/xfce4-wavelan-plugin
-	else
-        cd ./xfce4-wavelan-plugin
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-pulseaudio-plugin" ];then
-        git clone https://gitlab.xfce.org/panel-plugins/xfce4-pulseaudio-plugin
-	else
-        cd ./xfce4-pulseaudio-plugin
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-    
-    if [ ! -d "xfce4-notifyd" ];then
-        git clone https://gitlab.xfce.org/apps/xfce4-notifyd
-	else
-        cd ./xfce4-notifyd
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-    fi
-	
-	if [ ! -d "xfce4-battery-plugin" ];then
-        git clone https://gitlab.xfce.org/panel-plugins/xfce4-battery-plugin
-	else
-        cd ./xfce4-battery-plugin
-        git clean -xdf
-        git reset --hard HEAD
-        git pull origin master
-        cd ..
-	 fi
-	
-	
+}
 
+LIST="https://gitlab.xfce.org/xfce/xfce4-dev-tools
+https://gitlab.xfce.org/xfce/libxfce4util
+https://gitlab.xfce.org/xfce/xfconf
+https://gitlab.xfce.org/xfce/libxfce4ui
+https://gitlab.xfce.org/xfce/garcon
+https://gitlab.xfce.org/xfce/exo
+https://gitlab.xfce.org/xfce/thunar
+https://gitlab.xfce.org/xfce/xfce4-panel
+https://gitlab.xfce.org/xfce/xfce4-settings
+https://gitlab.xfce.org/xfce/xfce4-session
+https://gitlab.xfce.org/xfce/xfdesktop
+https://gitlab.xfce.org/xfce/xfwm4
+https://gitlab.xfce.org/xfce/xfce4-appfinder
+https://gitlab.xfce.org/xfce/tumbler
+https://gitlab.xfce.org/xfce/xfce4-power-manager
+https://gitlab.xfce.org/panel-plugins/xfce4-wavelan-plugin
+https://gitlab.xfce.org/panel-plugins/xfce4-pulseaudio-plugin
+https://gitlab.xfce.org/apps/xfce4-notifyd
+https://gitlab.xfce.org/panel-plugins/xfce4-battery-plugin
+https://gitlab.xfce.org/apps/xfce4-terminal
+https://gitlab.xfce.org/apps/xfce4-screenshooter
+https://gitlab.xfce.org/apps/xfce4-taskmanager
+https://gitlab.xfce.org/panel-plugins/xfce4-statusnotifier-plugin
+https://gitlab.xfce.org/panel-plugins/xfce4-whiskermenu-plugin"
+
+process_repos() {
+    for object in $LIST;do
+		 process_git $object
+    done
 }
 
 prepare(){
@@ -245,24 +111,10 @@ prepare(){
         sleep 1
     fi
     
-    cp -rf xfce4-dev-tools xfce4-prepare/xfce4-dev-tools
-	cp -rf libxfce4util xfce4-prepare/libxfce4util
-	cp -rf xfconf xfce4-prepare/xfconf
-	cp -rf libxfce4ui xfce4-prepare/libxfce4ui
-	cp -rf garcon xfce4-prepare/garcon
-	cp -rf exo xfce4-prepare/exo
-	cp -rf thunar xfce4-prepare/thunar
-	cp -rf xfce4-panel xfce4-prepare/xfce4-panel
-	cp -rf xfce4-settings xfce4-prepare/xfce4-settings
-	cp -rf xfce4-session xfce4-prepare/xfce4-session
-	cp -rf xfdesktop xfce4-prepare/xfdesktop
-	cp -rf xfwm4 xfce4-prepare/xfwm4
-	cp -rf xfce4-appfinder xfce4-prepare/xfce4-appfinder
-	cp -rf tumbler xfce4-prepare/tumbler
-	cp -rf xfce4-wavelan-plugin xfce4-prepare/xfce4-wavelan-plugin
-    cp -rf xfce4-pulseaudio-plugin xfce4-prepare/xfce4-pulseaudio-plugin
-	cp -rf xfce4-notifyd xfce4-prepare/xfce4-notifyd
-	cp -rf xfce4-battery-plugin xfce4-prepare/xfce4-battery-plugin
+    for object in $LIST;do
+		 NAME=$(echo $object | rev | cut -d '/' -f 1 | rev)
+		 cp -rf $NAME xfce4-prepare/$NAME
+    done
 
 }
 
@@ -271,10 +123,15 @@ disable_gtkdoc(){
 	CONF=""
 	if [ "$NAME" == "tumbler" ];then
 		CONF="configure.ac"
+		sed -i 's/docs/#docs/g' Makefile.am
+	elif [ "$NAME" == "xfce4-terminal" ];then
+		CONF="configure.ac.in"
+		sed -i 's+doc/Makefile++g' $CONF
+		sed -i 's+doc++g' Makefile.am
 	else
 		CONF="configure.ac.in"
+		sed -i 's/docs//g' Makefile.am
 	fi
-	
 	sed -i 's+GTK_DOC_CHECK+#GTK_DOC_CHECK+g' $CONF
 	sed -i 's+docs/Makefile++g' $CONF
 	sed -i 's+docs/design/Makefile++g' $CONF
@@ -289,26 +146,14 @@ disable_gtkdoc(){
 	sed -i 's+docs/references/version.xml++g' $CONF
 	sed -i 's+docs/spec/Makefile++g' $CONF
     sed -i 's+docs/version.xml++g' $CONF
-	sed -i 's+docs+#docs+g' Makefile.am
-	sed -i 's+gtk-doc.make+#gtk-doc.make+g' Makefile.am
+
+	sed -i 's+gtk-doc.make++g' Makefile.am
 	sed -i 's+--enable-gtk-doc+#--enable-gtk-doc+g' Makefile.am
 }
 
-
-compile(){
-    ##FUCK GTK-DOC, DUDE
-    NAME="$1"
-	disable_gtkdoc "$NAME" &> "$DIRECTORY"/logs/"$NAME".log
-    
-	CONF_ARGS="--prefix=/opt/xfce4 --disable-gtk2 --sysconfdir=/etc --datarootdir=/usr/share --disable-man --localstatedir=/var --enable-keybinder --enable-libnotify"
-    ./autogen.sh &>> "$DIRECTORY"/logs/"$NAME".log
-    ./configure $CONF_ARGS --enable-maintainer-mode &>> "$DIRECTORY"/logs/"$NAME".log
-    
-    if [ "$NAME" == "xfce4-dev-tools" ];then
-        sed -i 's+docs        \\+#docs        \\+g' Makefile
-    fi
-    
-    make -j"$threads" &>> "$DIRECTORY"/logs/"$NAME".log
+make_func(){
+	
+	make -j"$threads" &>> "$DIRECTORY"/logs/"$NAME".log
     if [ $? -eq 0 ]; then
         if [ $DST -eq 1 ]; then
             make -j"$threads" install DESTDIR="$DEST" &>> "$DIRECTORY"/logs/"$NAME".log
@@ -319,103 +164,51 @@ compile(){
         printf $RED"something went wrong making $NAME\n"$NC
         exit 1
     fi
+	
+}
+compile(){
+    ##FUCK GTK-DOC, DUDE
+    NAME="$1"
+    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
+	disable_gtkdoc "$NAME" &> "$DIRECTORY"/logs/"$NAME".log
+    
+	CONF_ARGS="--prefix=/opt/xfce4 --disable-gtk2 --sysconfdir=/etc --datarootdir=/usr/share --disable-man --localstatedir=/var --enable-keybinder --enable-libnotify"
+    ./autogen.sh &>> "$DIRECTORY"/logs/"$NAME".log
+    ./configure $CONF_ARGS --enable-maintainer-mode &>> "$DIRECTORY"/logs/"$NAME".log
+    
+    if [ "$NAME" == "xfce4-dev-tools" ];then
+        sed -i 's+docs        \\+#docs        \\+g' Makefile
+    fi
+    
+    make_func
+}
+compile_cmake(){
+    ##FUCK GTK-DOC, DUDE
+    NAME="$1"
+    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
+	disable_gtkdoc "$NAME" &> "$DIRECTORY"/logs/"$NAME".log
+    
+    CMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/opt/xfce4  -DCMAKE_INSTALL_DATAROOTDIR=/usr/share -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR"
+    
+	mkdir build
+	cd build
+	
+	cmake $CMAKE_ARGS  ..
+	make_func
+
 }
 
 build(){
-	
-	
-	#########   xfce4-dev-tools
-    NAME="xfce4-dev-tools"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#########   libxfce4util
-	NAME="libxfce4util"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfconf
-	NAME="xfconf"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/libxfce4ui
-	NAME="libxfce4ui"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/garcon
-	NAME="garcon"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/exo
-	NAME="exo"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/thunar
-	NAME="thunar"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-panel
-	NAME="xfce4-panel"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-settings
-	NAME="xfce4-settings"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-session
-	NAME="xfce4-session"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfdesktop
-	NAME="xfdesktop"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfwm4
-	NAME="xfwm4"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-appfinder
-	NAME="xfce4-appfinder"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/tumbler
-	NAME="tumbler"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-wavelan-plugin
-	NAME="xfce4-wavelan-plugin"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-    #xfce4-prepare/xfce4-pulseaudio-plugin
-	NAME="xfce4-pulseaudio-plugin"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-notifyd
-	NAME="xfce4-notifyd"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
-	#xfce4-prepare/xfce4-battery-plugin
-	NAME="xfce4-battery-plugin"
-    cd "$DIRECTORY"/xfce4-prepare/"$NAME"
-    compile $NAME
-    
+	for object in $LIST;do
+		NAME=$(echo $object | rev | cut -d '/' -f 1 | rev)
+		echo "compiling $NAME"
+		if [ $NAME == "xfce4-whiskermenu-plugin" ];then
+			compile_cmake $NAME
+		else
+			compile $NAME
+		fi
+    done    
 }
-
 
 
 printf $GREEN"HELLO THERE!\n"
