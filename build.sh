@@ -20,6 +20,11 @@ REPOFLAG=0
 THRD=0
 threads=$(grep -c processor /proc/cpuinfo)
 
+if [ ! -d ./logs ];then
+	mkdir logs
+fi
+
+
 ### just in case we set this
 export PATH="/opt/xfce4/bin:/opt/xfce4/sbin:$PATH"
 export LD_LIBRARY_PATH="/opt/xfce4/lib:$LD_LIBRARY_PATH"
